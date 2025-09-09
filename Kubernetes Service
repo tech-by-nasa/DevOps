@@ -1,0 +1,20 @@
+# The API version for the Service object.
+apiVersion: v1
+# The kind of Kubernetes resource we are creating.
+kind: Service
+# Metadata for the Service, including a name and labels.
+metadata:
+  name: my-nginx-service
+# The specification for the Service.
+spec:
+  # The type of Service. NodePort makes the service accessible on each node's IP at a static port.
+  type: NodePort
+  # This selector links the Service to the Pods created by the Deployment.
+  selector:
+    app: my-nginx
+  # The ports the Service will expose.
+  ports:
+    # The Service port (80) maps to the Pod's container port (80).
+    - protocol: TCP
+      port: 80
+      targetPort: 80
