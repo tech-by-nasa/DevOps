@@ -1,0 +1,225 @@
+Create: docker create command simply creates a container from an image, but doesn't start it. It returns a unique ID.
+Start: docker start command takes that ID and starts the container.
+Run: docker run command is the convenience command that combines create and start.
+Stop: docker stop command gracefully stops a running container. It sends a SIGTERM signal and waits for the process to exit.
+Kill: docker kill command sends a SIGKILL signal, immediately terminating the container. Use this for unresponsive containers.
+Remove: docker rm command deletes a stopped container.
+Inspect: docker inspect command gives you a verbose, JSON output of a container's configuration and state.
+Prune: docker system prune command is a powerful command that removes all unused Docker objects in one go.
+Execute: docker exec {options} command allows us to run new commands in a running container
+Build: docker build -t image_name:tag command is used to build the docker images with the help of Dockerfile.
+Push: docker push <Image name/Image ID> command pushes your image from Dockerfile to DcokerHub.
+Login: docker login command will help you to authenticate with the Docker hub by which you can push and pull your images.
+Restart: docker restart command followed by a container ID or name is used to restart the containers to resolve the containers.
+Inspection: docker inspect command followed by a container ID or name is to debug the container's errors when they run into some errors in real time.
+Top: docker container top <container_id_or_name> command displays the running processes inside a container.
+Commit: docker commit container_name_or_id new_image_name:tag command can create an image.
+Pull: docker pull command will pull the Docker image whcih is avalible in the dockerhub.
+Image: docker image ls command lists all the images present in the system.
+Help: docker run --help command helps to list the help on any command.
+
+
+DOCKER IMAGE COMMANDS:
+docker images command: It will list all the images which are pulled and build in the docker host.
+docker inspect command: It will helps to debug the docker image if any errors occurred while building an image or pulling the image.
+docker push command: Docker command will push the docker image into the Dockerhub.
+docker save command: It will save the docker image in the form of dockerfile.
+docker rmi command: It will remove the docker image.
+
+DOCKER CONTAINER COMMANDS:
+docker attach command: Connecting to an Existing Container.
+docker ps command: To list the running containers.
+docker container inspect infinite Command: To Inspect the Docker containers.
+docker exec command: To execute the commands in the running containers.
+docker cp command: To copy the file from docker host to the docker containers,
+
+# Example: Create, Start, and Inspect a Container
+docker create --name my-nginx-container nginx:latest
+docker start my-nginx-container
+docker ps
+docker inspect my-nginx-container | grep IPAddress
+
+GENERAL COMMANDS
+Start the docker daemon: docker -d
+Get help with Docker. Can also use –help on all subcommands: docker --help
+Display system-wide information: docker info
+
+IMAGES
+Docker images are a lightweight, standalone, executable package of software that includes everything needed to run an application: code, runtime, system tools, system libraries and settings.
+Build an Image from a Dockerfile: docker build -t <image_name> .
+
+CONTAINERS
+A container is a runtime instance of a docker image. A container will always run the same, regardless of the infrastructure. Containers isolate software from its environment and ensure that it works uniformly despite differences for instance between development and staging.
+Build an Image from a Dockerfile without the cache: docker build -t <image_name> . –no-cache
+Create and run a container from an image, with a custom name: docker run --name <container_name> <image_name>
+List local images: docker images
+Run a container with and publish a container’s port(s) to the host: docker run -p <host_port>:<container_port> <image_name>
+Delete an Image: docker rmi <image_name>
+Run a container in the background: docker run -d <image_name>
+
+Old Command	      New (Recommended)       Command	Purpose
+docker ps	        docker container ls	    List containers
+docker run	      docker container run	  Run a command in a new container
+docker rm	        docker container rm	    Remove one or more containers
+docker images	    docker image ls	        List images
+docker rmi	      docker image rm	        Remove one or more images
+
+Remove all unused images: docker image prune
+Start or stop an existing container: docker start|stop <container_name> (or <container-id>)
+Remove a stopped container: docker rm <container_name>
+
+DOCKER HUB
+Docker Hub is a service provided by Docker for finding and sharing container images with your team. Learn more and find images at https://hub.docker.com
+Open a shell inside a running container: docker exec -it <container_name> sh
+Fetch and follow the logs of a container: docker logs -f <container_name>
+Login into Docker: docker login -u <username>
+To inspect a running container: docker inspect <container_name> (or <container_id>)
+Publish an image to Docker Hub: docker push <username>/<image_name>
+To list currently running containers: docker ps
+Search Hub for an image: docker search <image_name>
+List all docker containers (running and stopped): docker ps --all
+Pull an image from a Docker Hub: docker pull <image_name>
+View resource usage stats: docker container stats
+
+INSTALLATION
+Docker Desktop is available for Mac, Linux and Windows
+https://docs.docker.com/desktop
+
+View example projects that use Docker
+https://github.com/docker/awesome-compose
+
+Check out our docs for information on using Docker
+https://docs.docker.com
+
+Important flags:
+-d flag: for running the commands in the background.
+-i flag: it will keep STDIN open even when not attached.
+-e flag: sets the environment variables 
+-f flag: remove the container forcefully.
+-v flag: remove the volumes.
+-l flag: remove the specific link mentioned.
+-a flag: shows us all the containers, stopped or running.
+-l flag: shows us the latest container.
+-q flag: shows only the Id of the containers. 
+
+Docker Ports (Port Mapping): In order to access the docker container from the outside world, we have to map the port on our host( Our laptop for example), to the port on the container. This is where port mapping comes into play.
+docker run -d -p <port_on_host> 
+<port_on_container> Container_name
+
+ENVIRONMENT VARIABLES:
+The following list of environment variables are supported by the docker command line:
+Variable	                      Description
+DOCKER_API_VERSION	            Override the negotiated API version to use for debugging (e.g. 1.19)
+DOCKER_CERT_PATH	              Location of your authentication keys. This variable is used both by the docker CLI and the dockerd daemon
+DOCKER_CONFIG                   The location of your client configuration files.
+DOCKER_CONTENT_TRUST_SERVER	    The URL of the Notary server to use. Defaults to the same URL as the registry.
+DOCKER_CONTENT_TRUST	          When set Docker uses notary to sign and verify images. Equates to --disable-content-trust=false for build, create, pull, push, run.
+DOCKER_CONTEXT	                Name of the docker context to use (overrides DOCKER_HOST env var and default context set with docker context use)
+DOCKER_CUSTOM_HEADERS	          (Experimental) Configure custom HTTP headers to be sent by the client. Headers must be provided as a comma-separated list of name=value pairs. This is the equivalent to the HttpHeaders field in the configuration file.
+DOCKER_DEFAULT_PLATFORM	        Default platform for commands that take the --platform flag.
+DOCKER_HIDE_LEGACY_COMMANDS	    When set, Docker hides "legacy" top-level commands (such as docker rm, and docker pull) in docker help output, and only Management commands per object-type (e.g., docker container) are printed. This may become the default in a future release.
+DOCKER_HOST	                    Daemon socket to connect to.
+DOCKER_TLS	                    Enable TLS for connections made by the docker CLI (equivalent of the --tls command-line option). Set to a non-empty value to enable TLS. Note that TLS is enabled automatically if any of the other TLS options are set.
+DOCKER_TLS_VERIFY	              When set Docker uses TLS and verifies the remote. This variable is used both by the docker CLI and the dockerd daemon
+BUILDKIT_PROGRESS	              Set type of progress output (auto, plain, tty, rawjson) when building with BuildKit backend. Use plain to show container output (default auto).
+
+Because Docker is developed using Go, It can also be used in any environment variables used by the Go runtime. In particular,
+Variable	Description
+HTTP_PROXY	Proxy URL for HTTP requests unless overridden by NoProxy.
+HTTPS_PROXY	Proxy URL for HTTPS requests unless overridden by NoProxy.
+NO_PROXY	Comma-separated values specifying hosts that should be excluded from proxying.
+
+SUBCOMMANDS:
+Command	                    Description
+docker build                (legacy builder)	Build an image from a Dockerfile
+docker builder	            Manage builds
+docker buildx	              Docker Buildx
+docker checkpoint         	Manage checkpoints
+docker compose	            Docker Compose
+docker config	              Manage Swarm configs
+docker container	          Manage containers
+docker context	            Manage contexts
+docker debug	              Get a shell into any container or image. An alternative to debugging with `docker exec`.
+docker desktop              (Beta)	Docker Desktop
+docker image	              Manage images
+docker init	                Creates Docker-related starter files for your project
+docker inspect	            Return low-level information on Docker objects
+docker login	              Authenticate to a registry
+docker logout	              Log out from a registry
+docker manifest	            Manage Docker image manifests and manifest lists
+docker mcp	
+docker model	              Docker Model Runner
+docker network	            Manage networks
+docker node	                Manage Swarm nodes
+docker offload	            Control Docker Offload from the CLI
+docker plugin	              Manage plugins
+docker scout	              Command line tool for Docker Scout
+docker search	              Search Docker Hub for images
+docker secret	              Manage Swarm secrets
+docker service	            Manage Swarm services
+docker stack	              Manage Swarm stacks
+docker swarm	              Manage Swarm
+docker system	              Manage Docker
+docker trust	              Manage trust on Docker images
+docker version	            Show the Docker version information
+docker volume	              Manage volumes
+
+OPTIONS:
+Option	            Default	                  Description
+--config	          /root/.docker	            Location of client config files
+-c, --context		                              Name of the context to use to connect to the daemon (overrides DOCKER_HOST env var and default context set with docker context use)
+-D, --debug		                                Enable debug mode
+-H, --host		                                Daemon socket to connect to
+-l, --log-level	    info	                    Set the logging level (debug, info, warn, error, fatal)
+--tls		                                      Use TLS; implied by --tlsverify
+--tlscacert	        /root/.docker/ca.pem	    Trust certs signed only by this CA
+--tlscert	          /root/.docker/cert.pem	  Path to TLS certificate file
+--tlskey	          /root/.docker/key.pem	    Path to TLS key file
+--tlsverify		                                Use TLS and verify the remote
+
+SAMPLE CONFIGURATION FILE:
+Following is a sample config.json file to illustrate the format used for various fields:
+{
+  "HttpHeaders": {
+    "MyHeader": "MyValue"
+  },
+  "psFormat": "table {{.ID}}\\t{{.Image}}\\t{{.Command}}\\t{{.Labels}}",
+  "imagesFormat": "table {{.ID}}\\t{{.Repository}}\\t{{.Tag}}\\t{{.CreatedAt}}",
+  "pluginsFormat": "table {{.ID}}\t{{.Name}}\t{{.Enabled}}",
+  "statsFormat": "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}",
+  "servicesFormat": "table {{.ID}}\t{{.Name}}\t{{.Mode}}",
+  "secretFormat": "table {{.ID}}\t{{.Name}}\t{{.CreatedAt}}\t{{.UpdatedAt}}",
+  "configFormat": "table {{.ID}}\t{{.Name}}\t{{.CreatedAt}}\t{{.UpdatedAt}}",
+  "serviceInspectFormat": "pretty",
+  "nodesFormat": "table {{.ID}}\t{{.Hostname}}\t{{.Availability}}",
+  "detachKeys": "ctrl-e,e",
+  "credsStore": "secretservice",
+  "credHelpers": {
+    "awesomereg.example.org": "hip-star",
+    "unicorn.example.com": "vcbait"
+  },
+  "plugins": {
+    "plugin1": {
+      "option": "value"
+    },
+    "plugin2": {
+      "anotheroption": "anothervalue",
+      "athirdoption": "athirdvalue"
+    }
+  },
+  "proxies": {
+    "default": {
+      "httpProxy":  "http://user:pass@example.com:3128",
+      "httpsProxy": "https://my-proxy.example.com:3129",
+      "noProxy":    "intra.mycorp.example.com",
+      "ftpProxy":   "http://user:pass@example.com:3128",
+      "allProxy":   "socks://example.com:1234"
+    },
+    "https://manager1.mycorp.example.com:2377": {
+      "httpProxy":  "http://user:pass@example.com:3128",
+      "httpsProxy": "https://my-proxy.example.com:3129"
+    }
+  }
+}
+
+FOR advanced docker, visit https://docs.docker.com/reference/cli/docker/
