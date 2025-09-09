@@ -1,0 +1,32 @@
+# The API version for the Deployment object.
+apiVersion: apps/v1
+# The kind of Kubernetes resource we are creating.
+kind: Deployment
+# Metadata for the Deployment, including a name and labels.
+metadata:
+  name: my-nginx-deployment
+  labels:
+    app: my-nginx
+# The specification for the Deployment.
+spec:
+  # We want to run 3 identical replicas of our application.
+  replicas: 3
+  # The selector identifies the pods managed by this Deployment based on their labels.
+  selector:
+    matchLabels:
+      app: my-nginx
+  # The Pod template describes the pods that the Deployment will create.
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    # The Pod's specification.
+    spec:
+      containers:
+        # A single container named `my-nginx`.
+      - name: my-nginx
+        # The image to use. You'll need to replace `your-repo` with your actual repository name.
+        image: your-repo/my-nginx:1.0
+        # The container port that Nginx is listening on.
+        ports:
+        - containerPort: 80
