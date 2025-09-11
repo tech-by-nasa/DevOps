@@ -60,7 +60,6 @@ jobs:
     needs: build_and_deploy
     
     permissions:
-      id-token: write
       contents: read
 
     steps:
