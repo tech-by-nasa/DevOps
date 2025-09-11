@@ -12,10 +12,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    env:
-      DOCKER_IMAGE: ghcr.io/${{ github.repository | toLower }}
-      DOCKER_TAG: ${{ github.sha }}
-
+    
     steps:
       # Step 1: Checkout the code from the repository
       - name: Checkout Code
@@ -31,10 +28,16 @@ jobs:
 
       # Step 3: Build the Docker image
       - name: Build Docker Image
+        env:
+          DOCKER_IMAGE: ghcr.io/${{ github.repository | toLower }}
+          DOCKER_TAG: ${{ github.sha }}
         run: docker build -t ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} .
 
       # Step 4: Run a vulnerability scan on the image
       - name: Scan Docker Image
+        env:
+          DOCKER_IMAGE: ghcr.io/${{ github.repository | toLower }}
+          DOCKER_TAG: ${{ github.sha }}
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
@@ -44,6 +47,9 @@ jobs:
 
       # Step 5: Tag and push the image to GitHub Container Registry
       - name: Push Docker Image
+        env:
+          DOCKER_IMAGE: ghcr.io/${{ github.repository | toLower }}
+          DOCKER_TAG: ${{ github.sha }}
         run: |
           docker tag ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} ${{ env.DOCKER_IMAGE }}:latest
           docker push ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
