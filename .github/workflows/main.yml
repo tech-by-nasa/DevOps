@@ -8,7 +8,7 @@ on:
 
 # Define environment variables to be used in the workflow
 env:
-  DOCKER_IMAGE: nagasarath/python-app
+  DOCKER_IMAGE: techbynasa/python-app
   DOCKER_TAG: ${{ github.sha }}
 
 jobs:
@@ -30,13 +30,14 @@ jobs:
       - name: Build Docker Image
         run: docker build -t ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} .
 
-      # Step 4: Scan the Docker Image for Vulnerabilities
-      - name: Scan Image for Vulnerabilities
+      # Step 4: Run a vulnerability scan on the image
+      - name: Scan Docker Image
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
-          format: "table"
-          exit-code: "0"
+          format: 'table'
+          exit-code: '1'
+          severity: 'HIGH,CRITICAL'
 
       # Step 5: Tag and push the image to Docker Hub
       - name: Push Docker Image
@@ -44,21 +45,3 @@ jobs:
           docker tag ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} ${{ env.DOCKER_IMAGE }}:latest
           docker push ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
           docker push ${{ env.DOCKER_IMAGE }}:latest
-
-      # Step 6: Install kubectl
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
-
-      # Step 7: Deploy to Kubernetes
-      - name: Deploy to Kubernetes
-        run: |
-          # Use the KUBE_CONFIG secret to authenticate kubectl
-          mkdir -p ~/.kube
-          printf "%s" "${{ secrets.KUBE_CONFIG }}"| base64 -d > ~/.kube/config
-          
-          # Replace the image placeholder with the correct image and tag
-          sed -i 's|your-dockerhub-username|'${{ secrets.DOCKERHUB_USERNAME }}'|g' kubernetes/deployment.yaml
-          
-          # Apply the Kubernetes manifests
-          kubectl apply --kubeconfig ~/.kube/config -f kubernetes/deployment.yaml
-          kubectl apply --kubeconfig ~/.kube/config -f kubernetes/service.yaml
