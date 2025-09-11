@@ -10,6 +10,9 @@ COPY ./app/requirements.txt ./
 # Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Fix: Upgrade setuptools to a non-vulnerable version
+RUN pip install --upgrade setuptools
+
 # Copy the entire app directory into the container
 COPY ./app/ ./
 
