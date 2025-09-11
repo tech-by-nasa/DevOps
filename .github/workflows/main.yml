@@ -95,6 +95,6 @@ jobs:
         uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
           service: 'python-app'
-          image: 'ghcr.io/techbynasa/devops:latest'
+          image: 'ghcr.io/tech-by-nasa/devops:latest'
           region: 'us-central1'
           project_id: ${{ secrets.GCP_PROJECT_ID }}
