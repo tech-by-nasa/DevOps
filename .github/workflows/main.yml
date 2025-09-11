@@ -75,7 +75,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-
+          
       # Step 4: Deploy to Cloud Run
       - name: Deploy to Cloud Run
         uses: 'google-github-actions/deploy-cloudrun@v2'
