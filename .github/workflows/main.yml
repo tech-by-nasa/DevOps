@@ -8,11 +8,16 @@ on:
 
 # Define environment variables to be used in the workflow
 env:
+  DOCKER_IMAGE: ghcr.io/${{ github.repository | toLower }}
   DOCKER_TAG: ${{ github.sha }}
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       # Step 1: Checkout the code from the repository
       - name: Checkout Code
@@ -28,24 +33,16 @@ jobs:
 
       # Step 3: Build the Docker image
       - name: Build Docker Image
-        run: docker build -t ghcr.io/${{ github.repository | toLower }}:${{ env.DOCKER_TAG }} .
+        run: docker build -t ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} .
 
       # Step 4: Run a vulnerability scan on the image
       - name: Scan Docker Image
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ghcr.io/${{ github.repository | toLower }}:${{ env.DOCKER_TAG }}
+          image-ref: ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
           format: 'table'
           exit-code: '1'
           severity: 'HIGH,CRITICAL'
-
-      # Step 5: Tag and push the image to GitHub Container Registry
-      - name: Push Docker Image
-        run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository | toLower }}
-          docker tag $IMAGE_NAME:${{ env.DOCKER_TAG }} $IMAGE_NAME:latest
-          docker push $IMAGE_NAME:${{ env.DOCKER_TAG }}
-          docker push $IMAGE_NAME:latest
 
       # Step 5: Tag and push the image to GitHub Container Registry
       - name: Push Docker Image
