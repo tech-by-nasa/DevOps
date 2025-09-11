@@ -6,17 +6,15 @@ on:
     branches:
       - main
 
-# Define environment variables to be used in the workflow
-env:
-  DOCKER_IMAGE: ghcr.io/${{ github.repository | toLower }}
-  DOCKER_TAG: ${{ github.sha }}
-
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+    env:
+      DOCKER_IMAGE: ghcr.io/${{ github.repository | toLower }}
+      DOCKER_TAG: ${{ github.sha }}
 
     steps:
       # Step 1: Checkout the code from the repository
