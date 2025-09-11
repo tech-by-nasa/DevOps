@@ -36,7 +36,7 @@ jobs:
       # Step 4: Build the Docker image
       - name: Build Docker Image
         env:
-          DOCKER_IMAGE_GHCR: ghcr.io/tech-by-nasa/devops
+          DOCKER_IMAGE_GHCR: ghcr.io/techbynasa/devops
           DOCKER_IMAGE_DOCKERHUB: techbynasa/python-app
           DOCKER_TAG: ${{ github.sha }}
         run: |
@@ -46,7 +46,7 @@ jobs:
       # Step 5: Run a vulnerability scan on the image
       - name: Scan Docker Image
         env:
-          DOCKER_IMAGE: ghcr.io/tech-by-nasa/devops
+          DOCKER_IMAGE: ghcr.io/techbynasa/devops
           DOCKER_TAG: ${{ github.sha }}
         uses: aquasecurity/trivy-action@master
         with:
@@ -58,7 +58,7 @@ jobs:
       # Step 6: Tag and push the images to both registries
       - name: Push Docker Images
         env:
-          DOCKER_IMAGE_GHCR: ghcr.io/tech-by-nasa/devops
+          DOCKER_IMAGE_GHCR: ghcr.io/techbynasa/devops
           DOCKER_IMAGE_DOCKERHUB: techbynasa/python-app
           DOCKER_TAG: ${{ github.sha }}
         run: |
@@ -66,7 +66,8 @@ jobs:
           docker push ${{ env.DOCKER_IMAGE_GHCR }}:${{ env.DOCKER_TAG }}
           docker push ${{ env.DOCKER_IMAGE_GHCR }}:latest
           docker tag ${{ env.DOCKER_IMAGE_DOCKERHUB }}:${{ env.DOCKER_TAG }} ${{ env.DOCKER_IMAGE_DOCKERHUB }}:latest
-          docker push ${{ env.DOCKER_IMAGE_DOCKERHUB }}:${{ env.DOCKER_IMAGE_DOCKERHUB }}:latest
+          docker push ${{ env.DOCKER_IMAGE_DOCKERHUB }}:${{ env.DOCKER_TAG }}
+          docker push ${{ env.DOCKER_IMAGE_DOCKERHUB }}:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -77,7 +78,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Step 2: Authenticate with Google Cloud using a Service Account Key
+      # Step 2: Authenticate with Google Cloud
       - name: Authenticate to Google Cloud
         uses: 'google-github-actions/auth@v2'
         with:
@@ -94,6 +95,6 @@ jobs:
         uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
           service: 'python-app'
-          image: 'ghcr.io/tech-by-nasa/devops:latest'
+          image: 'ghcr.io/techbynasa/devops:latest'
           region: 'us-central1'
           project_id: ${{ secrets.GCP_PROJECT_ID }}
