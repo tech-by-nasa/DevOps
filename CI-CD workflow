@@ -8,7 +8,7 @@ on:
 
 # Define environment variables to be used in the workflow
 env:
-  DOCKER_IMAGE: your-dockerhub-username/python-app
+  DOCKER_IMAGE: nagasarath/python-app
   DOCKER_TAG: ${{ github.sha }}
 
 jobs:
