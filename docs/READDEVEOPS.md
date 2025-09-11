@@ -1,6 +1,6 @@
-# Awesome DevOps
+# DevOps
 
-[![DevOps](http://awesome-devops.xyz/assets/banner.png)](https://github.com/tech-by-nasa/devops)
+[![DevOps](http://devops.xyz/assets/banner.png)](https://github.com/tech-by-nasa/devops)
 
 [![Deploy](https://github.com/tech-by-nasa/devops/actions/workflows/deploy.yml/badge.svg)](https://github.com/tech-by-nasa/devops/actions/workflows/deploy.yml)
 [![Links validator](https://github.com/tech-by-nasa/devops/actions/workflows/links-validator.yml/badge.svg)](https://github.com/tech-by-nasa/devops/actions/workflows/links-validator.yml)
