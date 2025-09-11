@@ -14,7 +14,6 @@ spec:
     spec:
       containers:
       - name: python-app
-        # This image will be updated by the CI/CD pipeline
         image: your-dockerhub-username/python-app:latest
         ports:
         - containerPort: 5000
