@@ -14,7 +14,7 @@ def hello():
 
     return (
         f"<h1 style='color: #333; text-align: center; font-family: sans-serif;'>"
-        f"Hello from a containerized Python app! Version 18.0</h1>"
+        f"Hello from a containerized Python app! Version 19.0</h1>"
         f"<p style='color: #666; text-align: center; font-family: sans-serif;'>"
         f"This application is running on pod <b>{hostname}</b>."
         f"</p>"
