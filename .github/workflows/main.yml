@@ -52,11 +52,13 @@ jobs:
       # Step 7: Deploy to Kubernetes
       - name: Deploy to Kubernetes
         run: |
+          # Use the KUBE_CONFIG secret to authenticate kubectl
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
+          
           # Replace the image placeholder with the correct image and tag
-          sed -i 's|your-dockerhub-username/python-app:latest|'${{ env.DOCKER_IMAGE }}':latest|g' kubernetes/deployment.yaml
+          sed -i 's|your-dockerhub-username|'${{ secrets.DOCKERHUB_USERNAME }}'|g' kubernetes/deployment.yaml
           
           # Apply the Kubernetes manifests
-          kubectl apply -f kubernetes/deployment.yaml
-          kubectl apply -f kubernetes/service.yaml
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+          kubectl apply --kubeconfig ~/.kube/config -f kubernetes/deployment.yaml
+          kubectl apply --kubeconfig ~/.kube/config -f kubernetes/service.yaml
