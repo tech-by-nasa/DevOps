@@ -24,3 +24,8 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/myapp:latest
+
+      - name: Debug Secrets
+        run: |
+          echo "Username: ${{ secrets.DOCKERHUB_USERNAME }}"
+          echo "Password length: ${#DOCKERHUB_TOKEN}"
