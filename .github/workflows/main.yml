@@ -54,7 +54,7 @@ jobs:
         run: |
           # Use the KUBE_CONFIG secret to authenticate kubectl
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
+          printf "%s" "${{ secrets.KUBE_CONFIG }}"| base64 -d > ~/.kube/config
           
           # Replace the image placeholder with the correct image and tag
           sed -i 's|your-dockerhub-username|'${{ secrets.DOCKERHUB_USERNAME }}'|g' kubernetes/deployment.yaml
