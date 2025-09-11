@@ -12,7 +12,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    
+      
     steps:
       # Step 1: Checkout the code from the repository
       - name: Checkout Code
@@ -25,15 +25,25 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      
+      # Step 3: Log in to Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Step 3: Build the Docker image
+      # Step 4: Build the Docker image
       - name: Build Docker Image
         env:
-          DOCKER_IMAGE: ghcr.io/tech-by-nasa/devops
+          DOCKER_IMAGE_GHCR: ghcr.io/tech-by-nasa/devops
+          DOCKER_IMAGE_DOCKERHUB: techbynasa/python-app
           DOCKER_TAG: ${{ github.sha }}
-        run: docker build -t ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} .
+        run: |
+          docker build -t ${{ env.DOCKER_IMAGE_GHCR }}:${{ env.DOCKER_TAG }} .
+          docker build -t ${{ env.DOCKER_IMAGE_DOCKERHUB }}:${{ env.DOCKER_TAG }} .
 
-      # Step 4: Run a vulnerability scan on the image
+      # Step 5: Run a vulnerability scan on the image
       - name: Scan Docker Image
         env:
           DOCKER_IMAGE: ghcr.io/tech-by-nasa/devops
@@ -45,16 +55,19 @@ jobs:
           exit-code: '1'
           severity: 'HIGH,CRITICAL'
 
-      # Step 5: Tag and push the image to GitHub Container Registry
-      - name: Push Docker Image
+      # Step 6: Tag and push the images to both registries
+      - name: Push Docker Images
         env:
-          DOCKER_IMAGE: ghcr.io/tech-by-nasa/devops
+          DOCKER_IMAGE_GHCR: ghcr.io/tech-by-nasa/devops
+          DOCKER_IMAGE_DOCKERHUB: techbynasa/python-app
           DOCKER_TAG: ${{ github.sha }}
         run: |
-          docker tag ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} ${{ env.DOCKER_IMAGE }}:latest
-          docker push ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
-          docker push ${{ env.DOCKER_IMAGE }}:latest
-  
+          docker tag ${{ env.DOCKER_IMAGE_GHCR }}:${{ env.DOCKER_TAG }} ${{ env.DOCKER_IMAGE_GHCR }}:latest
+          docker push ${{ env.DOCKER_IMAGE_GHCR }}:${{ env.DOCKER_TAG }}
+          docker push ${{ env.DOCKER_IMAGE_GHCR }}:latest
+          docker tag ${{ env.DOCKER_IMAGE_DOCKERHUB }}:${{ env.DOCKER_TAG }} ${{ env.DOCKER_IMAGE_DOCKERHUB }}:latest
+          docker push ${{ env.DOCKER_IMAGE_DOCKERHUB }}:${{ env.DOCKER_IMAGE_DOCKERHUB }}:latest
+
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_deploy
@@ -64,9 +77,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Step 2: Authenticate with Google Cloud
-      - id: auth
-        name: Authenticate to Google Cloud
+      # Step 2: Authenticate with Google Cloud using a Service Account Key
+      - name: Authenticate to Google Cloud
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
@@ -79,7 +91,6 @@ jobs:
           
       # Step 4: Deploy to Cloud Run
       - name: Deploy to Cloud Run
-        id: deploy
         uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
           service: 'python-app'
