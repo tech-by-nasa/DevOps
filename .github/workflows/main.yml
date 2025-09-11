@@ -29,14 +29,14 @@ jobs:
       # Step 3: Build the Docker image
       - name: Build Docker Image
         env:
-          DOCKER_IMAGE: ghcr.io/${{ github.repository | toLower }}
+          DOCKER_IMAGE: ghcr.io/tech-by-nasa/devops
           DOCKER_TAG: ${{ github.sha }}
         run: docker build -t ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} .
 
       # Step 4: Run a vulnerability scan on the image
       - name: Scan Docker Image
         env:
-          DOCKER_IMAGE: ghcr.io/${{ github.repository | toLower }}
+          DOCKER_IMAGE: ghcr.io/tech-by-nasa/devops
           DOCKER_TAG: ${{ github.sha }}
         uses: aquasecurity/trivy-action@master
         with:
@@ -48,7 +48,7 @@ jobs:
       # Step 5: Tag and push the image to GitHub Container Registry
       - name: Push Docker Image
         env:
-          DOCKER_IMAGE: ghcr.io/${{ github.repository | toLower }}
+          DOCKER_IMAGE: ghcr.io/tech-by-nasa/devops
           DOCKER_TAG: ${{ github.sha }}
         run: |
           docker tag ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} ${{ env.DOCKER_IMAGE }}:latest
